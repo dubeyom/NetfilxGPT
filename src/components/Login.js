@@ -1,12 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Header from "./Header";
-
+import { checkValidData } from "../utils/validate";
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
 
   const toggleSignInForm = () => {
     setIsSignInForm(!isSignInForm);
   };
+
+  const [errorMessage, setErrorMessage] = useState();
+  const email = useRef(null);
+  const password = useRef(null);
+
+  const handleButtonClick = () => {
+    // Validate the form data
+    const message = checkValidData(email.current.value, password.current.value);
+    setErrorMessage(message);
+  };
+
+  // console.log(email.current.value);
+  // console.log(password.current.value);
+
   return (
     <div>
       <Header />
@@ -16,7 +30,10 @@ const Login = () => {
           alt="body"
         />
       </div>
-      <form className="flex flex-col items-center absolute pt-28 bg-black opacity-90 text-black my-24 mx-auto top-0 right-0 left-0 max-w-[400px] min-h-[450px] ">
+      <form
+        onSubmit={(e) => e.preventDefault()}
+        className="flex flex-col items-center absolute pt-28 bg-black opacity-90 text-black my-24 mx-auto top-0 right-0 left-0 max-w-[400px] min-h-[450px] "
+      >
         <h1 className="text-2xl text-white py-4 ">
           {isSignInForm ? "Sign In" : "Sign Up"}
         </h1>
@@ -28,16 +45,22 @@ const Login = () => {
           />
         )}
         <input
+          ref={email}
           type="text"
           placeholder="Email Address"
           className="p-2 m-2 bg-gray-100 rounded-md"
         />
         <input
-          type="text"
+          ref={password}
+          type="password"
           placeholder="Password"
           className="p-2 m-2  bg-gray-100 rounded-md"
         />
-        <button className="px-16 py-2 m-4 bg-red-500 tracking-widest rounded-md text-white">
+        <p className="text-red-500 font-bold animate-bounce ">{errorMessage}</p>
+        <button
+          className="px-16 py-2 m-4 bg-red-500 tracking-widest rounded-md text-white"
+          onClick={handleButtonClick}
+        >
           {" "}
           {isSignInForm ? "Sign In" : "Sign Up"}
         </button>
